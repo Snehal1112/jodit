@@ -572,6 +572,32 @@ describe('Enter behavior Jodit Editor Tests', function() {
 				);
 			});
 
+			describe('with ENTER button', function () {
+				describe('In the middle', function () {
+					it('should split BLOCKQUOTE element', function () {
+						const editor = getJodit({splitBlockQuoteByEnter:true});
+
+						editor.value = '<blockquote>test</blockquote>';
+
+						editor.s
+							.createRange(true)
+							.setStart(editor.editor.firstChild.firstChild, 2);
+
+						simulateEvent(
+							'keydown',
+							Jodit.KEY_ENTER,
+							editor.editor
+						);
+
+						editor.s.insertNode(editor.createInside.text('split '));
+
+						expect(editor.value).equals(
+							'<blockquote>te</blockquote><p>split </p><blockquote>st</blockquote>'
+						);
+					});
+				});
+			});
+
 			describe('with SHIFT button', function() {
 				describe('In the end', function() {
 					it('should add new P element after PRE', function() {

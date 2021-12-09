@@ -10436,6 +10436,19 @@ class enter extends Plugin {
             sel.select(current);
         }
         let currentBox = this.getBlockWrapper(current);
+        const blockquote = dom/* Dom.closest */.i.closest(currentBox, ['blockquote'], this.j.editor);
+        if (blockquote && editor.options.splitBlockQuoteByEnter) {
+            const getRootBlock = (node) => {
+                if (dom/* Dom.isTag */.i.isTag(node.parentNode, 'blockquote')) {
+                    return getRootBlock(node.parentNode);
+                }
+                return node;
+            };
+            currentBox = getRootBlock(blockquote);
+            sel.splitSelection(currentBox);
+            sel.setCursorBefore(currentBox);
+            return false;
+        }
         const isLi = dom/* Dom.isTag */.i.isTag(currentBox, 'li');
         if ((!isLi || event.shiftKey) &&
             !this.checkBR(current, event.shiftKey)) {
@@ -17611,6 +17624,7 @@ class Config {
         this.events = {};
         this.textIcons = false;
         this.showBrowserColorPicker = true;
+        this.splitBlockQuoteByEnter = false;
     }
     static get defaultOptions() {
         if (!Config.__defaultOptions) {

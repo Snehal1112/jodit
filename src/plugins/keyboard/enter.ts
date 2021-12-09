@@ -118,6 +118,26 @@ export class enter extends Plugin {
 
 		let currentBox = this.getBlockWrapper(current);
 
+		const blockquote = Dom.closest(
+			currentBox,
+			['blockquote'],
+			this.j.editor
+		);
+
+		// Split the blockquote
+		if (blockquote && editor.options.splitBlockQuoteByEnter) {
+			const getRootBlock = (node: HTMLElement): HTMLElement => {
+				if (Dom.isTag(node.parentNode, 'blockquote')) {
+					return getRootBlock(node.parentNode);
+				}
+				return node;
+			};
+			currentBox = getRootBlock(blockquote);
+			sel.splitSelection(currentBox);
+			sel.setCursorBefore(currentBox);
+			return false;
+		}
+
 		const isLi = Dom.isTag(currentBox, 'li');
 
 		// if use <br> defaultTag for break line or when was entered SHIFt key or in <td> or <th> or <blockquote>

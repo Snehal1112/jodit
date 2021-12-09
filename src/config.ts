@@ -775,6 +775,11 @@ export class Config implements IViewOptions {
 	 */
 	showBrowserColorPicker: boolean = true;
 
+	/**
+	 * Split the blockquote by enter click.
+	 */
+	splitBlockQuoteByEnter: boolean = false;
+
 	private static __defaultOptions: Config;
 	static get defaultOptions(): Config {
 		if (!Config.__defaultOptions) {

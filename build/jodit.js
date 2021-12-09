@@ -2431,6 +2431,7 @@ var Config = (function () {
         this.events = {};
         this.textIcons = false;
         this.showBrowserColorPicker = true;
+        this.splitBlockQuoteByEnter = false;
     }
     Object.defineProperty(Config, "defaultOptions", {
         get: function () {
@@ -24384,6 +24385,19 @@ var enter = (function (_super) {
             sel.select(current);
         }
         var currentBox = this.getBlockWrapper(current);
+        var blockquote = dom_1.Dom.closest(currentBox, ['blockquote'], this.j.editor);
+        if (blockquote && editor.options.splitBlockQuoteByEnter) {
+            var getRootBlock_1 = function (node) {
+                if (dom_1.Dom.isTag(node.parentNode, 'blockquote')) {
+                    return getRootBlock_1(node.parentNode);
+                }
+                return node;
+            };
+            currentBox = getRootBlock_1(blockquote);
+            sel.splitSelection(currentBox);
+            sel.setCursorBefore(currentBox);
+            return false;
+        }
         var isLi = dom_1.Dom.isTag(currentBox, 'li');
         if ((!isLi || event.shiftKey) &&
             !this.checkBR(current, event.shiftKey)) {
